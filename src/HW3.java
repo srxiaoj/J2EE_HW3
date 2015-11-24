@@ -347,14 +347,14 @@ public class HW3 extends HttpServlet {
     }
 
     private void outputToDoList(HttpServletResponse response, HttpServletRequest request)
-            throws IOException {
+            throws IOException, ServletException {
         // Just call the version that takes a List passing an empty List
         List<String> list = new ArrayList<String>();
         outputFavorite(response, request, list);
     }
 
     private void outputToDoList(HttpServletResponse response, HttpServletRequest request, String message)
-            throws IOException
+            throws IOException, ServletException
     {
         // Just put the message into a List and call the version that takes a
         // List
@@ -364,11 +364,11 @@ public class HW3 extends HttpServlet {
     }
 
     private void outputFavorite(HttpServletResponse response, HttpServletRequest request,
-            List<String> messages) throws IOException
+            List<String> messages) throws IOException, ServletException
     {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("email");
-
+        int clickPoint = 0;
         // Get the list of favorites to display at the end
         FavoriteBean[] beans;
         try {
@@ -398,6 +398,14 @@ public class HW3 extends HttpServlet {
         // Generate an HTML <form> to get data from the user
         out.println("<form method=\"POST\">");
         out.println("    <table>");
+        out.println("       <tr>");
+        out.println("           <td>");
+        out.println("               <form method=\"POST\">");
+        out.println("                   <input type=\"hidden\" name=\"favoriteId\" value=\""
+                + clickPoint + "\" />");
+        out.println("               </form>");
+        out.println("           </td>");
+        out.println("        </tr>");
         out.println("        <tr><td colspan=\"3\"><hr/></td></tr>");
         out.println("        <tr>");
         out.println("            <td style=\"font-size: large\">URL:</td>");
@@ -421,41 +429,25 @@ public class HW3 extends HttpServlet {
             out.println(message);
             out.println("</p>");
         }
+        System.out.println("~~~~~~~~~~~~~~~~");
         
         out.println("<p style=\"font-size: x-large\">The list now has "
                 + beans.length + " favorites.</p>");
         out.println("<table>");
         for (int i = 0; i < beans.length; i++) {
-//            String clickStr = request.getParameter("clickCount");
-//            String favoriteIdStr = request.getParameter("favoriteId");
-//            int click;
-//            int favoriteId;
-//            if (clickStr != null && favoriteIdStr != null) {
-//                click = Integer.parseInt(clickStr) + 1;
-//                favoriteId = Integer.parseInt(favoriteIdStr);
-//            } else {
-//                click = beans[i].getClickCount();
-//                favoriteId = beans[i].getFavoriteId();
-//            }
-//            try {
-//                favoriteDAO.incrementClick(click + 1, favoriteId);
-//            } catch (MyDAOException e) {
-//                // If there's an access error, add the message to our list of
-//                // messages
-//                messages.add(e.getMessage());
-//                beans = new FavoriteBean[0];
-//            }
+
             out.println("    <tr>");
             out.println("        <td>");
-//            out.println("            <form method=\"POST\">");
-//            out.println("                <input type=\"hidden\" name=\"favoriteId\" value=\""
-//                    + beans[i].getFavoriteId() + "\" />");
-//            out.println("            </form>");
+            out.println("            <form method=\"POST\">");
+            out.println("                <input type=\"hidden\" name=\"userId\" value=\""
+                    + beans[i].getUserId() + "\" />");
+            out.println("            </form>");
             out.println("        </td>");
             out.println("        <td><span style=\"font-size: x-large\">"
                     + (i + 1) + ".</span></td>");
             out.println("        <td>");
-            out.println("          <a href=\"fav?favoriteId="+ beans[i].getFavoriteId() + "\">");
+            
+            out.println("          <a href=\"\">");
 //            out.println("          <a href=\"Calculator\">");
             out.println("            <span style=\"font-size: x-large\">" + beans[i].getURL() + "</span>");
             out.println("          </a>");
@@ -480,5 +472,24 @@ public class HW3 extends HttpServlet {
 
         out.println("</body>");
         out.println("</html>");
+        
+//      String favoriteIdStr = request.getParameter("favoriteId");
+//      System.out.println(favoriteIdStr);
+      int favoriteId = clickPoint;
+      System.out.println(favoriteId);
+//      if (favoriteIdStr != null) {
+//          favoriteId = Integer.parseInt(favoriteIdStr);
+          try {
+              FavoriteBean bean = favoriteDAO.getFavorite(favoriteId);
+              favoriteDAO.incrementClick(bean.getClickCount() + 1, favoriteId);
+//              int userId = bean.getUserId();
+//              User user = (User) userDAO.readInFavoriteForm(userId);
+//              HttpSession session = request.getSession();
+//              session.setAttribute("email", user);
+          } catch (MyDAOException e) {
+              throw new ServletException(e);
+          }
+//      }
     }
+    
 }
