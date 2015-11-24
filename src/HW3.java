@@ -426,25 +426,6 @@ public class HW3 extends HttpServlet {
                 + beans.length + " favorites.</p>");
         out.println("<table>");
         for (int i = 0; i < beans.length; i++) {
-//            String clickStr = request.getParameter("clickCount");
-//            String favoriteIdStr = request.getParameter("favoriteId");
-//            int click;
-//            int favoriteId;
-//            if (clickStr != null && favoriteIdStr != null) {
-//                click = Integer.parseInt(clickStr) + 1;
-//                favoriteId = Integer.parseInt(favoriteIdStr);
-//            } else {
-//                click = beans[i].getClickCount();
-//                favoriteId = beans[i].getFavoriteId();
-//            }
-//            try {
-//                favoriteDAO.incrementClick(click + 1, favoriteId);
-//            } catch (MyDAOException e) {
-//                // If there's an access error, add the message to our list of
-//                // messages
-//                messages.add(e.getMessage());
-//                beans = new FavoriteBean[0];
-//            }
             out.println("    <tr>");
             out.println("        <td>");
 //            out.println("            <form method=\"POST\">");
@@ -456,7 +437,6 @@ public class HW3 extends HttpServlet {
                     + (i + 1) + ".</span></td>");
             out.println("        <td>");
             out.println("          <a href=\"fav?favoriteId="+ beans[i].getFavoriteId() + "\">");
-//            out.println("          <a href=\"Calculator\">");
             out.println("            <span style=\"font-size: x-large\">" + beans[i].getURL() + "</span>");
             out.println("          </a>");
             out.println("        </td>");
@@ -473,7 +453,7 @@ public class HW3 extends HttpServlet {
             out.println("        <td></td>");
             out.println("        <td></td>");
             out.println("        <td><span style=\"font-size: x-large\">"
-                    + beans[i].getClickCount() + 1 + " Clicks </td>");
+                    + beans[i].getClickCount() + " Clicks </td>");
             out.println("    </tr>");
         }
         out.println("</table>");

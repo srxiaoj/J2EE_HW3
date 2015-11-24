@@ -30,7 +30,7 @@ public class ClickUpdate extends HttpServlet{
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws IOException, ServletException {
-        System.out.println("!!!!!!!!!!");
+//        System.out.println("!!!!!!!!!!");
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String favoriteIdStr = request.getParameter("favoriteId");
@@ -40,6 +40,7 @@ public class ClickUpdate extends HttpServlet{
             try {
                 FavoriteBean bean = favoriteDAO.getFavorite(favoriteId);
                 favoriteDAO.incrementClick(bean.getClickCount() + 1, favoriteId);
+                response.sendRedirect("");
             } catch (MyDAOException e) {
                 throw new ServletException(e);
             }

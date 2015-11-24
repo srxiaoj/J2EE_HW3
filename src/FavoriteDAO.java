@@ -253,7 +253,7 @@ public class FavoriteDAO {
             PreparedStatement pstmt = con.prepareStatement("UPDATE " + tableName + " SET clickCount=" + newClick
                     + " WHERE favoriteId=" + favoriteId);
             int i = pstmt.executeUpdate();
-            System.out.println(i);
+//            System.out.println(i);
             pstmt.close();
             releaseConnection(con);
         } catch (SQLException e) {
