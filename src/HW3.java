@@ -473,7 +473,7 @@ public class HW3 extends HttpServlet {
             out.println("        <td></td>");
             out.println("        <td></td>");
             out.println("        <td><span style=\"font-size: x-large\">"
-                    + beans[i].getClickCount() + 1 + " Clicks </td>");
+                    + beans[i].getClickCount() + " Clicks </td>");
             out.println("    </tr>");
         }
         out.println("</table>");

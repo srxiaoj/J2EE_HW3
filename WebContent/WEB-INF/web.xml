@@ -46,7 +46,7 @@
     
      <servlet-mapping>
         <servlet-name> clickUpdate-servlet </servlet-name>
-        <url-pattern>	/fav/*   </url-pattern>
+        <url-pattern>	/fav   </url-pattern>
     </servlet-mapping>
     
     <welcome-file-list>

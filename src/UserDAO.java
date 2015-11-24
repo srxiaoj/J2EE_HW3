@@ -163,6 +163,49 @@ public class UserDAO {
             throw new MyDAOException(e);
         }
     }
+    /**
+     * read the userId, search this userId in table
+     * if no user found, return null, otherwise return the user.
+     * @param email
+     * @return
+     * @throws MyDAOException
+     */
+    public User readInFavoriteForm(int userId) throws MyDAOException {
+        Connection con = null;
+        try {
+            con = getConnection();
+
+            PreparedStatement pstmt = con.prepareStatement("SELECT * FROM "
+                    + tableName + " WHERE userId=?");
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            User user;
+            if (!rs.next()) {
+                user = null;
+            } else {
+                user = new User();
+                user.setUserId(rs.getInt("userId"));
+                user.setEmail(rs.getString("email"));
+                user.setFirstName(rs.getString("firstName"));
+                user.setLastName(rs.getString("lastName"));
+                user.setPassword(rs.getString("password"));
+            }
+
+            rs.close();
+            pstmt.close();
+            releaseConnection(con);
+            return user;
+
+        } catch (Exception e) {
+            try {
+                if (con != null)
+                    con.close();
+            } catch (SQLException e2) { /* ignore */
+            }
+            throw new MyDAOException(e);
+        }
+    }
     private boolean tableExists() throws MyDAOException {
         Connection con = null;
         try {
