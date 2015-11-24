@@ -31,7 +31,7 @@ public class LoginForm  {
         if (errors.size() > 0) return errors;
 
         if (!button.equals("Login") && !button.equals("Register")) errors.add("Invalid button");
-        if (email.matches(".*[<>\"].*")) errors.add("Emailmay not contain angle brackets or quotes");
+        if (email.matches(".*[<>\"].*")) errors.add("Email may not contain angle brackets or quotes");
 		
         return errors;
     }

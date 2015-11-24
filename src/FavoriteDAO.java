@@ -9,6 +9,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PrimitiveIterator;
+
+import org.apache.tomcat.dbcp.dbcp2.PStmtKey;
+import org.apache.tomcat.dbcp.dbcp2.cpdsadapter.PStmtKeyCPDS;
+
+import com.sun.corba.se.spi.orbutil.fsm.State;
 
 public class FavoriteDAO {
     private List<Connection> connectionPool = new ArrayList<Connection>();
@@ -96,8 +102,42 @@ public class FavoriteDAO {
             throw new MyDAOException(e);
         }
     }
+    
+    public FavoriteBean getFavorite(int favoriteId) throws MyDAOException {
+        Connection con = null;
+        try {
+            con = getConnection();
+            
+            PreparedStatement pstmt = con.prepareStatement("SELECT * FROM "
+                    + tableName + " WHERE favoriteId=?");
+            pstmt.setInt(1, favoriteId);
+            ResultSet rs = pstmt.executeQuery();
 
-    public FavoriteBean[] getItems(int userId) throws MyDAOException {
+            FavoriteBean bean = null;
+            while (rs.next()) {
+                bean = new FavoriteBean();
+                bean.setFavoriteId(rs.getInt("favoriteId"));
+                bean.setUserId(rs.getInt("userId"));
+                bean.setURL(rs.getString("URL"));
+                bean.setComment(rs.getString("comment"));
+                bean.setClickCount(rs.getInt("clickCount"));
+                bean.setPosition(rs.getInt("position"));
+            }
+            pstmt.close();
+            releaseConnection(con);
+
+            return bean;
+        } catch (SQLException e) {
+            try {
+                if (con != null)
+                    con.close();
+            } catch (SQLException e2) { /* ignore */
+            }
+            throw new MyDAOException(e);
+        }
+    }
+    
+    public FavoriteBean[] getFavoriteLists(int userId) throws MyDAOException {
         Connection con = null;
         try {
             con = getConnection();
@@ -195,6 +235,26 @@ public class FavoriteDAO {
                     + " position INT NOT NULL DEFAULT 0, " 
                     + " PRIMARY KEY(favoriteId))");
             stmt.close();
+            releaseConnection(con);
+        } catch (SQLException e) {
+            try {
+                if (con != null)
+                    con.close();
+            } catch (SQLException e2) { /* ignore */
+            }
+            throw new MyDAOException(e);
+        }
+    }
+    
+    public void incrementClick(int newClick, int favoriteId) throws MyDAOException {
+        Connection con = null;
+        try {
+            con = getConnection();
+            PreparedStatement pstmt = con.prepareStatement("UPDATE " + tableName + " SET clickCount=" + newClick
+                    + " WHERE favoriteId=" + favoriteId);
+            int i = pstmt.executeUpdate();
+            System.out.println(i);
+            pstmt.close();
             releaseConnection(con);
         } catch (SQLException e) {
             try {

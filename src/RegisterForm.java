@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import jdk.nashorn.internal.ir.RuntimeNode.Request;
+
 public class RegisterForm  {
     private String email;
     private String firstName;
@@ -26,6 +28,13 @@ public class RegisterForm  {
     public String getButton()    { return button;    }
     
     public boolean isPresent()   { return button != null; }
+    public boolean isFirstTimeVisit(HttpServletRequest request) {
+        String isFirst = request.getParameter("First Time Visit");
+        if (isFirst == null) {
+            return true;
+        } else 
+            return false;
+    }
 
     public List<String> getValidationErrors() {
         List<String> errors = new ArrayList<String>();
@@ -39,7 +48,7 @@ public class RegisterForm  {
         if (errors.size() > 0) return errors;
 
         if (!button.equals("Login") && !button.equals("Register")) errors.add("Invalid button");
-        if (email.matches(".*[<>\"].*")) errors.add("Emailmay not contain angle brackets or quotes");
+        if (email.matches(".*[<>\"].*")) errors.add("Email may not contain angle brackets or quotes");
         
         return errors;
     }

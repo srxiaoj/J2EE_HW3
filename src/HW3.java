@@ -56,19 +56,20 @@ public class HW3 extends HttpServlet {
         if (!registerForm.isPresent()) {
             outputRegisterPage(response, registerForm, null);
             return;
-        } 
+        }
+        if (!registerForm.isFirstTimeVisit(request)) {
         errors.addAll(registerForm.getValidationErrors());
         if (errors.size() != 0) {
             outputRegisterPage(response, registerForm, errors);
             return;
         }
-
+        }
         try {
             User user;
             
             if (registerForm.getButton().equals("Register")) {
                 if (userDAO.readInLoginForm(registerForm.getEmail()) != null) {
-                    errors.add("Email also used");
+                    errors.add("Email already used");
                     outputRegisterPage(response, registerForm, errors);
                     return;
                 }
@@ -106,7 +107,7 @@ public class HW3 extends HttpServlet {
         List<String> errors = new ArrayList<String>();
 
         LoginForm loginForm = new LoginForm(request);
-        RegisterForm registerForm = new RegisterForm(request);
+//        RegisterForm registerForm = new RegisterForm(request);
 
         if (!loginForm.isPresent()) {
             outputLoginPage(response, loginForm, null);
@@ -177,10 +178,6 @@ public class HW3 extends HttpServlet {
             processAdd(request, response, true);
             return;
         }
-        
-        //TODO: click hyperlink response
-        
-        
         outputToDoList(response, request, "No such operation: " + action);
     }
 
@@ -266,6 +263,7 @@ public class HW3 extends HttpServlet {
         out.println("            <td colspan=\"2\" style=\"text-align: center;\">");
         out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
         out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
+        out.println("                <input type=\"hidden\" name=\"First Time Visit\"/>");
         out.println("            </td>");
         out.println("        </tr>");
         out.println("    </table>");
@@ -339,6 +337,7 @@ public class HW3 extends HttpServlet {
         out.println("            <td colspan=\"2\" style=\"text-align: center;\">");
         out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
         out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
+        out.println("                <input type=\"hidden\" name=\"First Time Visit\"/>");
         out.println("            </td>");
         out.println("        </tr>");
         out.println("    </table>");
@@ -369,11 +368,11 @@ public class HW3 extends HttpServlet {
     {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("email");
+
         // Get the list of favorites to display at the end
         FavoriteBean[] beans;
         try {
-            beans = favoriteDAO.getItems(user.getUserId());
-
+            beans = favoriteDAO.getFavoriteLists(user.getUserId());
             Arrays.sort(beans,
                     (FavoriteBean i1, FavoriteBean i2) -> i1.getPosition() - i2.getPosition());
 
@@ -422,22 +421,42 @@ public class HW3 extends HttpServlet {
             out.println(message);
             out.println("</p>");
         }
-
+        
         out.println("<p style=\"font-size: x-large\">The list now has "
                 + beans.length + " favorites.</p>");
         out.println("<table>");
         for (int i = 0; i < beans.length; i++) {
+//            String clickStr = request.getParameter("clickCount");
+//            String favoriteIdStr = request.getParameter("favoriteId");
+//            int click;
+//            int favoriteId;
+//            if (clickStr != null && favoriteIdStr != null) {
+//                click = Integer.parseInt(clickStr) + 1;
+//                favoriteId = Integer.parseInt(favoriteIdStr);
+//            } else {
+//                click = beans[i].getClickCount();
+//                favoriteId = beans[i].getFavoriteId();
+//            }
+//            try {
+//                favoriteDAO.incrementClick(click + 1, favoriteId);
+//            } catch (MyDAOException e) {
+//                // If there's an access error, add the message to our list of
+//                // messages
+//                messages.add(e.getMessage());
+//                beans = new FavoriteBean[0];
+//            }
             out.println("    <tr>");
             out.println("        <td>");
-            out.println("            <form method=\"POST\">");
-            out.println("                <input type=\"hidden\" name=\"favoriteId\" value=\""
-                    + beans[i].getFavoriteId() + "\" />");
-            out.println("            </form>");
+//            out.println("            <form method=\"POST\">");
+//            out.println("                <input type=\"hidden\" name=\"favoriteId\" value=\""
+//                    + beans[i].getFavoriteId() + "\" />");
+//            out.println("            </form>");
             out.println("        </td>");
             out.println("        <td><span style=\"font-size: x-large\">"
                     + (i + 1) + ".</span></td>");
             out.println("        <td>");
-            out.println("          <a href=\"" + beans[i].getURL() + "\">");
+            out.println("          <a href=\"fav?favoriteId="+ beans[i].getFavoriteId() + "\">");
+//            out.println("          <a href=\"Calculator\">");
             out.println("            <span style=\"font-size: x-large\">" + beans[i].getURL() + "</span>");
             out.println("          </a>");
             out.println("        </td>");
@@ -454,7 +473,7 @@ public class HW3 extends HttpServlet {
             out.println("        <td></td>");
             out.println("        <td></td>");
             out.println("        <td><span style=\"font-size: x-large\">"
-                    + beans[i].getClickCount() + " Clicks </td>");
+                    + beans[i].getClickCount() + 1 + " Clicks </td>");
             out.println("    </tr>");
         }
         out.println("</table>");
