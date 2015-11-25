@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +21,7 @@ public class HW3 extends HttpServlet {
 
     private FavoriteDAO favoriteDAO;
     private UserDAO userDAO;
+    private static int count = 1;
 
     public void init() throws ServletException {
         String jdbcDriverName = getInitParameter("jdbcDriver");
@@ -36,7 +38,14 @@ public class HW3 extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+//        String registration = request.getParameter("registration");
+//        if (registration != null) { // go to registration page
+//            System.out.println("registration: " + registration);
+//            response.sendRedirect("register.html");
+//            return;
+//        }
         if (session.getAttribute("email") == null) {
+            System.out.println("login: " + count++);
             login(request, response);
         } else {
             manageList(request, response);
@@ -47,7 +56,7 @@ public class HW3 extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
-
+/*
     private void register (HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         List<String> errors = new ArrayList<>();
@@ -57,7 +66,7 @@ public class HW3 extends HttpServlet {
             outputRegisterPage(response, registerForm, null);
             return;
         }
-        if (!registerForm.isFirstTimeVisit(request)) {
+        if (!registerForm.isPresent()) {
         errors.addAll(registerForm.getValidationErrors());
         if (errors.size() != 0) {
             outputRegisterPage(response, registerForm, errors);
@@ -67,7 +76,7 @@ public class HW3 extends HttpServlet {
         try {
             User user;
             
-            if (registerForm.getButton().equals("Register")) {
+            if (registerForm.getRegistration() != null) {
                 if (userDAO.readInLoginForm(registerForm.getEmail()) != null) {
                     errors.add("Email already used");
                     outputRegisterPage(response, registerForm, errors);
@@ -102,22 +111,22 @@ public class HW3 extends HttpServlet {
             outputRegisterPage(response, registerForm, errors);
         }
     }
+    */
+    
     private void login(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<String> errors = new ArrayList<String>();
 
         LoginForm loginForm = new LoginForm(request);
-//        RegisterForm registerForm = new RegisterForm(request);
 
         if (!loginForm.isPresent()) {
             outputLoginPage(response, loginForm, null);
             return;
         }
-        if (loginForm.getButton().equals("Register")) {
-//          outputRegisterPage(response, registerForm, null);
-          register(request, response);
-          return;
-        }
+//        if (loginForm.getButton().equals("Register")) {
+//          register(request, response);
+//          return;
+//        }
         errors.addAll(loginForm.getValidationErrors());
         if (errors.size() != 0) {
             outputLoginPage(response, loginForm, errors);
@@ -198,7 +207,6 @@ public class HW3 extends HttpServlet {
             FavoriteBean bean = new FavoriteBean();
             bean.setURL(form.getURL());
             bean.setComment(request.getParameter("comment"));
-//            bean.setClickCount(request.getParameter("clickCount") + 1);
             User u = (User) request.getSession().getAttribute("email");
             bean.setUserId(u.getUserId());
             if (addToFavorite) {
@@ -262,15 +270,22 @@ public class HW3 extends HttpServlet {
         out.println("        <tr>");
         out.println("            <td colspan=\"2\" style=\"text-align: center;\">");
         out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
-        out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
-        out.println("                <input type=\"hidden\" name=\"First Time Visit\"/>");
+//        out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
         out.println("            </td>");
+        out.println("        </tr>");
+        out.println("        <tr>");
+        out.println("          <td colspan = \"3\" style=\"text-align: center;\">");
+        out.println("            <a href=\"register.html\">");
+        out.println("              <span style=\"font-size: x-large\">Register</span>");
+        out.println("            </a>");
+        out.println("          </td>");
         out.println("        </tr>");
         out.println("    </table>");
         out.println("</form>");
         out.println("</body>");
         out.println("</html>");
     }
+    /*
     private void outputRegisterPage(HttpServletResponse response, RegisterForm form,
             List<String> errors) throws IOException {
         response.setContentType("text/html");
@@ -345,7 +360,7 @@ public class HW3 extends HttpServlet {
         out.println("</body>");
         out.println("</html>");
     }
-
+*/
     private void outputToDoList(HttpServletResponse response, HttpServletRequest request)
             throws IOException {
         // Just call the version that takes a List passing an empty List
