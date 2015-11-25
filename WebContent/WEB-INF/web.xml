@@ -26,7 +26,7 @@
     
     <servlet-mapping>
         <servlet-name>  my-servlet        </servlet-name>
-        <url-pattern>   /login   			  </url-pattern>
+        <url-pattern>   /HW3   			  </url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -67,11 +67,14 @@
        
     <servlet-mapping>
         <servlet-name>  register-servlet        </servlet-name>
-        <url-pattern>   /register.html    	  </url-pattern>
+        <url-pattern>   /register    	  </url-pattern>
+        <!-- for /register.html url pattern-->
+        <!-- neither /register or /register/* or /register* or /register.**** work here-->
+        <!-- but *.html and /register.html work-->
     </servlet-mapping>
     
     <welcome-file-list>
-        <welcome-file>   login   </welcome-file>
+        <welcome-file>   HW3   </welcome-file>
     </welcome-file-list>
 
 </web-app>

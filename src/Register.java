@@ -40,7 +40,7 @@ public class Register extends HttpServlet{
         if (action != null) {
             if (action.equals("Login")) {
                 System.out.println("rediect to login");
-                response.sendRedirect("login");
+                response.sendRedirect("");
                 return;
             }
         }

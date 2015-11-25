@@ -5,15 +5,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 public class HW3 extends HttpServlet {
 
@@ -38,12 +35,6 @@ public class HW3 extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-//        String registration = request.getParameter("registration");
-//        if (registration != null) { // go to registration page
-//            System.out.println("registration: " + registration);
-//            response.sendRedirect("register.html");
-//            return;
-//        }
         if (session.getAttribute("email") == null) {
             System.out.println("login: " + count++);
             login(request, response);
@@ -56,62 +47,6 @@ public class HW3 extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
-/*
-    private void register (HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        List<String> errors = new ArrayList<>();
-        RegisterForm registerForm = new RegisterForm(request);
-        
-        if (!registerForm.isPresent()) {
-            outputRegisterPage(response, registerForm, null);
-            return;
-        }
-        if (!registerForm.isPresent()) {
-        errors.addAll(registerForm.getValidationErrors());
-        if (errors.size() != 0) {
-            outputRegisterPage(response, registerForm, errors);
-            return;
-        }
-        }
-        try {
-            User user;
-            
-            if (registerForm.getRegistration() != null) {
-                if (userDAO.readInLoginForm(registerForm.getEmail()) != null) {
-                    errors.add("Email already used");
-                    outputRegisterPage(response, registerForm, errors);
-                    return;
-                }
-//                user = userDAO.readInRegisterForm(registerForm.getEmail());
-                user = new User();
-                user.setEmail(registerForm.getEmail());
-                user.setFirstName(registerForm.getFirstName());
-                user.setLastName(registerForm.getLastName());
-                user.setPassword(registerForm.getPassword());
-                userDAO.create(user);
-            } else {
-                errors.addAll(registerForm.getValidationErrors());
-                if (errors.size() != 0) {
-                    outputRegisterPage(response, registerForm, errors);
-                    return;
-                }
-//                user = userDAO.readInLoginForm(registerForm.getEmail());
-//                if (user == null) {
-//                    errors.add("No such user");
-//                    outputRegisterPage(response, registerForm, errors);
-//                    return;
-//                }
-            }
-            user = userDAO.readInLoginForm(registerForm.getEmail());
-            HttpSession session = request.getSession();
-            session.setAttribute("email", user);
-            manageList(request, response);
-        } catch (MyDAOException e) {
-            errors.add(e.getMessage());
-            outputRegisterPage(response, registerForm, errors);
-        }
-    }
-    */
     
     private void login(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -123,10 +58,6 @@ public class HW3 extends HttpServlet {
             outputLoginPage(response, loginForm, null);
             return;
         }
-//        if (loginForm.getButton().equals("Register")) {
-//          register(request, response);
-//          return;
-//        }
         errors.addAll(loginForm.getValidationErrors());
         if (errors.size() != 0) {
             outputLoginPage(response, loginForm, errors);
@@ -270,89 +201,13 @@ public class HW3 extends HttpServlet {
         out.println("        <tr>");
         out.println("            <td colspan=\"2\" style=\"text-align: center;\">");
         out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
-//        out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
         out.println("            </td>");
         out.println("        </tr>");
         out.println("        <tr>");
-        out.println("          <td colspan = \"3\" style=\"text-align: center;\">");
-        out.println("            <a href=\"register.html\">");
-        out.println("              <span style=\"font-size: x-large\">Register</span>");
-        out.println("            </a>");
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("    </table>");
-        out.println("</form>");
-        out.println("</body>");
-        out.println("</html>");
-    }
-    /*
-    private void outputRegisterPage(HttpServletResponse response, RegisterForm form,
-            List<String> errors) throws IOException {
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-
-        generateHead(out);
-
-        out.println("<body>");
-        out.println("<h2>Register</h2>");
-
-        if (errors != null && errors.size() > 0) {
-            for (String error : errors) {
-                out.println("<p style=\"font-size: large; color: red\">");
-                out.println(error);
-                out.println("</p>");
-            }
-        }
-
-        // Generate an HTML <form> to get data from the user
-        out.println("<form method=\"POST\">");
-        out.println("    <table>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">Email Address:</td>");
-        out.println("            <td>");
-        out.println("                <input type=\"text\" name=\"email\"");
-        if (form != null && form.getEmail() != null) {
-            out.println("                    value=\"" + form.getEmail()
-                    + "\"");
-        }
-        out.println("                />");
-        out.println("            </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">First Name:</td>");
-        out.println("            <td>");
-        out.println("                <input type=\"text\" name=\"firstName\"");
-        if (form != null && form.getFirstName() != null) {
-            out.println("                    value=\"" + form.getFirstName()
-                    + "\"");
-        }
-        out.println("                />");
-        out.println("            </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">Last Name:</td>");
-        out.println("            <td>");
-        out.println("                <input type=\"text\" name=\"lastName\"");
-        if (form != null && form.getLastName() != null) {
-            out.println("                    value=\"" + form.getLastName()
-                    + "\"");
-        }
-        out.println("                />");
-        out.println("            </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">Password:</td>");
-        out.println("            <td><input type=\"password\" name=\"password\" /></td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td colspan=\"2\" style=\"text-align: center;\">");
-        out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
-        out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
-        out.println("                <input type=\"hidden\" name=\"First Time Visit\"/>");
+        out.println("            <td colspan = \"2\" style=\"text-align: center;\">");
+        out.println("                <a href=\"register\">");
+        out.println("                     <span style=\"font-size: x-large\">Go To Register</span>");
+        out.println("                </a>");
         out.println("            </td>");
         out.println("        </tr>");
         out.println("    </table>");
@@ -360,7 +215,6 @@ public class HW3 extends HttpServlet {
         out.println("</body>");
         out.println("</html>");
     }
-*/
     private void outputToDoList(HttpServletResponse response, HttpServletRequest request)
             throws IOException {
         // Just call the version that takes a List passing an empty List
@@ -443,10 +297,6 @@ public class HW3 extends HttpServlet {
         for (int i = 0; i < beans.length; i++) {
             out.println("    <tr>");
             out.println("        <td>");
-//            out.println("            <form method=\"POST\">");
-//            out.println("                <input type=\"hidden\" name=\"favoriteId\" value=\""
-//                    + beans[i].getFavoriteId() + "\" />");
-//            out.println("            </form>");
             out.println("        </td>");
             out.println("        <td><span style=\"font-size: x-large\">"
                     + (i + 1) + ".</span></td>");
@@ -461,14 +311,14 @@ public class HW3 extends HttpServlet {
             out.println("        <td></td>");
             out.println("        <td></td>");
             out.println("        <td><span style=\"font-size: x-large\">"
-                    + beans[i].getComment() + "</td>");
+                    + beans[i].getComment() + "</span></td>");
             out.println("    </tr>");
             
             out.println("    <tr>");
             out.println("        <td></td>");
             out.println("        <td></td>");
             out.println("        <td><span style=\"font-size: x-large\">"
-                    + beans[i].getClickCount() + " Clicks </td>");
+                    + beans[i].getClickCount() + " Clicks </span></td>");
             out.println("    </tr>");
         }
         out.println("</table>");
