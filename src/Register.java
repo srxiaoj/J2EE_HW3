@@ -44,9 +44,7 @@ public class Register extends HttpServlet{
                 return;
             }
         }
-        else {
-            register(request, response);
-        }
+        register(request, response);
     }
     private void register (HttpServletRequest request, HttpServletResponse response) 
                 throws ServletException, IOException {
