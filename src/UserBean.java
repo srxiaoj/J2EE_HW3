@@ -1,8 +1,11 @@
+import org.genericdao.PrimaryKey;
+
 /**
  * @author Haorui Wu
  * @date 11/23/2015
  * @courseNumber: 08672
  */
+@PrimaryKey("userId")
 public class UserBean {
     private int userId;
     private String email;

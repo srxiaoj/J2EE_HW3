@@ -1,13 +1,22 @@
+import org.genericdao.PrimaryKey;
+
 /**
  * @author Haorui Wu
  * @date 11/23/2015
  * @courseNumber: 08672
  */
 
+/**
+ * genericDAO is very tricky with naming of getter and setter.
+ * first letter of the variable should be lower case
+ * @author thanksgiving
+ *
+ */
+@PrimaryKey("favoriteId")
 public class FavoriteBean {
     private int favoriteId;
     private int userId;
-    private String URL;
+    private String url;
     private String comment;
     private int clickCount;
     private int position;
@@ -20,8 +29,8 @@ public class FavoriteBean {
         return userId;
     }
 
-    public String getURL() {
-        return URL;
+    public String getUrl() {
+        return url;
     }
 
     public String getComment() {
@@ -44,8 +53,8 @@ public class FavoriteBean {
         userId = i;
     }
 
-    public void setURL(String s) {
-        URL = s;
+    public void setUrl(String s) {
+        url = s;
     }
 
     public void setComment(String s) {

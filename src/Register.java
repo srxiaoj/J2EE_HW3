@@ -74,21 +74,22 @@ public class Register extends HttpServlet{
             }
 //            }
             try {
-                UserBean user;
+                UserBean user = new UserBean();
                 
                 if (registerForm.getButton().equals("Register")) {
                     System.out.println("click on register");
-                    if (userDAO.read(registerForm.getEmail()) != null) {
+                    UserBean[] a = userDAO.getUser(registerForm.getEmail());
+                    if (a.length != 0) {
                         errors.add("Email already used");
                         outputRegisterPage(response, registerForm, errors);
                         return;
                     }
-    //                user = userDAO.readInRegisterForm(registerForm.getEmail());
-                    user = new UserBean();
                     user.setEmail(registerForm.getEmail());
                     user.setFirstName(registerForm.getFirstName());
                     user.setLastName(registerForm.getLastName());
                     user.setPassword(registerForm.getPassword());
+                    System.out.println("saving user bean in register page");
+                    // create user bean with primaryKey and override the original user bean
                     userDAO.create(user);
                 } else {
                     errors.addAll(registerForm.getValidationErrors());
@@ -96,18 +97,13 @@ public class Register extends HttpServlet{
                         outputRegisterPage(response, registerForm, errors);
                         return;
                     }
-    //                user = userDAO.readInLoginForm(registerForm.getEmail());
-    //                if (user == null) {
-    //                    errors.add("No such user");
-    //                    outputRegisterPage(response, registerForm, errors);
-    //                    return;
-    //                }
                 }
-                user = userDAO.read(registerForm.getEmail());
+//                user = userDAO.read(registerForm.getEmail());
                 HttpSession session = request.getSession();
                 session.setAttribute("email", user);
 //                manageList(request, response);
                 response.sendRedirect("");
+                System.out.println("redirect to favorite list page");
             } catch (RollbackException e) {
                 errors.add(e.getMessage());
                 outputRegisterPage(response, registerForm, errors);

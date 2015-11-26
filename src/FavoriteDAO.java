@@ -42,6 +42,7 @@ public class FavoriteDAO extends GenericDAO<FavoriteBean>{
             
          // Create a new ItemBean in the database with the next id number
             createAutoIncrement(bean);
+            Transaction.commit();
         } finally {
             if (Transaction.isActive())
                 Transaction.rollback();
@@ -123,8 +124,9 @@ public class FavoriteDAO extends GenericDAO<FavoriteBean>{
     }
     
     public FavoriteBean[] getUserFavorites(int userId) throws RollbackException {
-        String userIdString = String.valueOf(userId);
-        FavoriteBean[] a = match(MatchArg.contains("userId", userIdString));
+        System.out.println("start to list out favorite beans of this userId");
+        FavoriteBean[] a = match(MatchArg.equals("userId", userId));
+        System.out.println("list out favorite beans of this userId");
         return a;
 //        Connection con = null;
 //        try {

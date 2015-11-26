@@ -81,13 +81,14 @@ public class HW3 extends HttpServlet {
                     outputLoginPage(response, loginForm, errors);
                     return;
                 }
-                user = userDAO.read(loginForm.getEmail());
-                if (user == null) {
+                UserBean[] a = userDAO.getUser(loginForm.getEmail());
+                if (a.length == 0) {
                     errors.add("No such user");
                     outputLoginPage(response, loginForm, errors);
                     return;
                 }
-
+                // if array a is not empty, then user is the first element
+                user = a[0];
                 if (!loginForm.getPassword().equals(user.getPassword())) {
                     errors.add("Incorrect password");
                     outputLoginPage(response, loginForm, errors);
@@ -145,7 +146,7 @@ public class HW3 extends HttpServlet {
 
         try {
             FavoriteBean bean = new FavoriteBean();
-            bean.setURL(form.getURL());
+            bean.setUrl(form.getURL());
             bean.setComment(form.getComment());
             UserBean u = (UserBean) request.getSession().getAttribute("email");
             bean.setUserId(u.getUserId());
@@ -250,6 +251,7 @@ public class HW3 extends HttpServlet {
         // Get the list of favorites to display at the end
         FavoriteBean[] beans;
         try {
+            System.out.println("Get favorite list using userId in HW3");
             beans = favoriteDAO.getUserFavorites(user.getUserId());
             Arrays.sort(beans,
                     (FavoriteBean i1, FavoriteBean i2) -> i1.getPosition() - i2.getPosition());
@@ -311,7 +313,7 @@ public class HW3 extends HttpServlet {
                     + (i + 1) + ".</span></td>");
             out.println("        <td>");
             out.println("          <a href=\"fav?favoriteId="+ beans[i].getFavoriteId() + "\">");
-            out.println("            <span style=\"font-size: x-large\">" + beans[i].getURL() + "</span>");
+            out.println("            <span style=\"font-size: x-large\">" + beans[i].getUrl() + "</span>");
             out.println("          </a>");
             out.println("        </td>");
             out.println("    </tr>");
