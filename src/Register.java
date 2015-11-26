@@ -90,7 +90,7 @@ public class Register extends HttpServlet{
                     user.setPassword(registerForm.getPassword());
                     System.out.println("saving user bean in register page");
                     // create user bean with primaryKey and override the original user bean
-                    userDAO.create(user);
+                    userDAO.createAutoIncrement(user);
                 } else {
                     errors.addAll(registerForm.getValidationErrors());
                     if (errors.size() != 0) {
@@ -98,10 +98,10 @@ public class Register extends HttpServlet{
                         return;
                     }
                 }
-//                user = userDAO.read(registerForm.getEmail());
                 HttpSession session = request.getSession();
                 session.setAttribute("email", user);
-//                manageList(request, response);
+                System.out.println("In register page: ");
+                System.out.println("userId is: " + user.getUserId());
                 response.sendRedirect("");
                 System.out.println("redirect to favorite list page");
             } catch (RollbackException e) {

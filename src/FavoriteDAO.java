@@ -20,25 +20,25 @@ public class FavoriteDAO extends GenericDAO<FavoriteBean>{
         
         try {
             Transaction.begin();
-            FavoriteBean[] a = match(MatchArg.max("position"));
-            
-            FavoriteBean bottomBean;
-            if (a.length == 0) {
-                bottomBean = null;
-            } else {
-                bottomBean = a[0];
-            }
-            int newPos;
-            if (bottomBean == null) {
-                // List is empty...just add it with position = 1
-                newPos = 1;
-            } else {
-                // Create the new item with position one more than the bottom
-                // bean's position
-                newPos = bottomBean.getPosition() + 1;
-            }
-
-            bean.setPosition(newPos);
+//            FavoriteBean[] a = match(MatchArg.max("position"));
+//            
+//            FavoriteBean bottomBean;
+//            if (a.length == 0) {
+//                bottomBean = null;
+//            } else {
+//                bottomBean = a[0];
+//            }
+//            int newPos;
+//            if (bottomBean == null) {
+//                // List is empty...just add it with position = 1
+//                newPos = 1;
+//            } else {
+//                // Create the new item with position one more than the bottom
+//                // bean's position
+//                newPos = bottomBean.getPosition() + 1;
+//            }
+//
+//            bean.setPosition(newPos);
             
          // Create a new ItemBean in the database with the next id number
             createAutoIncrement(bean);

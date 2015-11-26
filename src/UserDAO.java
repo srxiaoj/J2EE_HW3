@@ -25,14 +25,14 @@ public class UserDAO extends GenericDAO<UserBean> {
 //        try {
 //            Transaction.begin();
 //         // Create a new ItemBean in the database with the next id number
-//            System.out.println("start creating user bean");
-//            createAutoIncrement(user);
-//            System.out.println("finish creating user bean");
+//            
+//            create(user);
+////            createAutoIncrement(user);
+//            Transaction.commit();
 //        } finally {
 //            if (Transaction.isActive())
 //                Transaction.rollback();
 //        }
-//        
 //    }
     
     public UserBean[] getUser(String email) throws RollbackException {

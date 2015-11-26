@@ -253,8 +253,8 @@ public class HW3 extends HttpServlet {
         try {
             System.out.println("Get favorite list using userId in HW3");
             beans = favoriteDAO.getUserFavorites(user.getUserId());
-            Arrays.sort(beans,
-                    (FavoriteBean i1, FavoriteBean i2) -> i1.getPosition() - i2.getPosition());
+//            Arrays.sort(beans,
+//                    (FavoriteBean i1, FavoriteBean i2) -> i1.getPosition() - i2.getPosition());
 
         } catch (RollbackException e) {
             // If there's an access error, add the message to our list of

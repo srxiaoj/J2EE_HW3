@@ -19,7 +19,7 @@ public class FavoriteBean {
     private String url;
     private String comment;
     private int clickCount;
-    private int position;
+//    private int position;
 
     public int getFavoriteId() {
         return favoriteId;
@@ -41,9 +41,9 @@ public class FavoriteBean {
         return clickCount;
     }
 
-    public int getPosition() {
-        return position;
-    }
+//    public int getPosition() {
+//        return position;
+//    }
 
     public void setFavoriteId(int i) {
         favoriteId = i;
@@ -65,7 +65,7 @@ public class FavoriteBean {
         clickCount = i;
     }
 
-    public void setPosition(int i) {
-        position = i;
-    }
+//    public void setPosition(int i) {
+//        position = i;
+//    }
 }
