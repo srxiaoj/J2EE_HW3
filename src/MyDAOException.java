@@ -1,4 +1,8 @@
-
+/**
+ * @author Haorui Wu
+ * @date 11/23/2015
+ * @courseNumber: 08672
+ */
 
 public class MyDAOException extends Exception {
     private static final long serialVersionUID = 1L;

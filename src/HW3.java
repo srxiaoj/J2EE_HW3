@@ -1,4 +1,8 @@
-
+/**
+ * @author Haorui Wu
+ * @date 11/23/2015
+ * @courseNumber: 08672
+ */
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import jdk.nashorn.internal.ir.RuntimeNode.Request;
+import org.genericdao.ConnectionPool;
+import org.genericdao.DAOException;
+import org.genericdao.RollbackException;
 
 public class HW3 extends HttpServlet {
 
@@ -20,15 +26,17 @@ public class HW3 extends HttpServlet {
 
     private FavoriteDAO favoriteDAO;
     private UserDAO userDAO;
+    private static int count = 1;
 
     public void init() throws ServletException {
         String jdbcDriverName = getInitParameter("jdbcDriver");
         String jdbcURL = getInitParameter("jdbcURL");
 
         try {
-            userDAO = new UserDAO(jdbcDriverName, jdbcURL, "user");
-            favoriteDAO = new FavoriteDAO(jdbcDriverName, jdbcURL, "fav");
-        } catch (MyDAOException e) {
+            ConnectionPool cp = new ConnectionPool(jdbcDriverName, jdbcURL);
+            userDAO = new UserDAO(cp, "haoruiw_user");
+            favoriteDAO = new FavoriteDAO(cp, "haoruiw_favorite");
+        } catch (DAOException e) {
             throw new ServletException(e);
         }
     }
@@ -37,6 +45,7 @@ public class HW3 extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("email") == null) {
+            System.out.println("login: " + count++);
             login(request, response);
         } else {
             manageList(request, response);
@@ -47,76 +56,16 @@ public class HW3 extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
-
-    private void register (HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        List<String> errors = new ArrayList<>();
-        RegisterForm registerForm = new RegisterForm(request);
-        
-        if (!registerForm.isPresent()) {
-            outputRegisterPage(response, registerForm, null);
-            return;
-        }
-        if (!registerForm.isFirstTimeVisit(request)) {
-        errors.addAll(registerForm.getValidationErrors());
-        if (errors.size() != 0) {
-            outputRegisterPage(response, registerForm, errors);
-            return;
-        }
-        }
-        try {
-            User user;
-            
-            if (registerForm.getButton().equals("Register")) {
-                if (userDAO.readInLoginForm(registerForm.getEmail()) != null) {
-                    errors.add("Email already used");
-                    outputRegisterPage(response, registerForm, errors);
-                    return;
-                }
-//                user = userDAO.readInRegisterForm(registerForm.getEmail());
-                user = new User();
-                user.setEmail(registerForm.getEmail());
-                user.setFirstName(registerForm.getFirstName());
-                user.setLastName(registerForm.getLastName());
-                user.setPassword(registerForm.getPassword());
-                userDAO.create(user);
-            } else {
-                errors.addAll(registerForm.getValidationErrors());
-                if (errors.size() != 0) {
-                    outputRegisterPage(response, registerForm, errors);
-                    return;
-                }
-//                user = userDAO.readInLoginForm(registerForm.getEmail());
-//                if (user == null) {
-//                    errors.add("No such user");
-//                    outputRegisterPage(response, registerForm, errors);
-//                    return;
-//                }
-            }
-            user = userDAO.readInLoginForm(registerForm.getEmail());
-            HttpSession session = request.getSession();
-            session.setAttribute("email", user);
-            manageList(request, response);
-        } catch (MyDAOException e) {
-            errors.add(e.getMessage());
-            outputRegisterPage(response, registerForm, errors);
-        }
-    }
+    
     private void login(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<String> errors = new ArrayList<String>();
 
         LoginForm loginForm = new LoginForm(request);
-//        RegisterForm registerForm = new RegisterForm(request);
 
         if (!loginForm.isPresent()) {
             outputLoginPage(response, loginForm, null);
             return;
-        }
-        if (loginForm.getButton().equals("Register")) {
-//          outputRegisterPage(response, registerForm, null);
-          register(request, response);
-          return;
         }
         errors.addAll(loginForm.getValidationErrors());
         if (errors.size() != 0) {
@@ -124,7 +73,7 @@ public class HW3 extends HttpServlet {
             return;
         }
         try {
-            User user;
+            UserBean user;
             
             if (loginForm.getButton().equals("Login")) {
                 errors.addAll(loginForm.getValidationErrors());
@@ -132,7 +81,7 @@ public class HW3 extends HttpServlet {
                     outputLoginPage(response, loginForm, errors);
                     return;
                 }
-                user = userDAO.readInLoginForm(loginForm.getEmail());
+                user = userDAO.read(loginForm.getEmail());
                 if (user == null) {
                     errors.add("No such user");
                     outputLoginPage(response, loginForm, errors);
@@ -149,7 +98,7 @@ public class HW3 extends HttpServlet {
                 manageList(request, response);
             }
 
-        } catch (MyDAOException e) {
+        } catch (RollbackException e) {
             errors.add(e.getMessage());
             outputLoginPage(response, loginForm, errors);
         }
@@ -197,15 +146,14 @@ public class HW3 extends HttpServlet {
         try {
             FavoriteBean bean = new FavoriteBean();
             bean.setURL(form.getURL());
-            bean.setComment(request.getParameter("comment"));
-//            bean.setClickCount(request.getParameter("clickCount") + 1);
-            User u = (User) request.getSession().getAttribute("email");
+            bean.setComment(form.getComment());
+            UserBean u = (UserBean) request.getSession().getAttribute("email");
             bean.setUserId(u.getUserId());
             if (addToFavorite) {
-                favoriteDAO.addToBottom(bean);
+                favoriteDAO.create(bean);
             }
             outputToDoList(response, request, "Favorite Added");
-        } catch (MyDAOException e) {
+        } catch (RollbackException e) {
             errors.add(e.getMessage());
             outputFavorite(response, request, errors);
         }
@@ -262,8 +210,13 @@ public class HW3 extends HttpServlet {
         out.println("        <tr>");
         out.println("            <td colspan=\"2\" style=\"text-align: center;\">");
         out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
-        out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
-        out.println("                <input type=\"hidden\" name=\"First Time Visit\"/>");
+        out.println("            </td>");
+        out.println("        </tr>");
+        out.println("        <tr>");
+        out.println("            <td colspan = \"2\" style=\"text-align: center;\">");
+        out.println("                <a href=\"register\">");
+        out.println("                     <span style=\"font-size: x-large\">Go To Register</span>");
+        out.println("                </a>");
         out.println("            </td>");
         out.println("        </tr>");
         out.println("    </table>");
@@ -271,90 +224,15 @@ public class HW3 extends HttpServlet {
         out.println("</body>");
         out.println("</html>");
     }
-    private void outputRegisterPage(HttpServletResponse response, RegisterForm form,
-            List<String> errors) throws IOException {
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-
-        generateHead(out);
-
-        out.println("<body>");
-        out.println("<h2>Register</h2>");
-
-        if (errors != null && errors.size() > 0) {
-            for (String error : errors) {
-                out.println("<p style=\"font-size: large; color: red\">");
-                out.println(error);
-                out.println("</p>");
-            }
-        }
-
-        // Generate an HTML <form> to get data from the user
-        out.println("<form method=\"POST\">");
-        out.println("    <table>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">Email Address:</td>");
-        out.println("            <td>");
-        out.println("                <input type=\"text\" name=\"email\"");
-        if (form != null && form.getEmail() != null) {
-            out.println("                    value=\"" + form.getEmail()
-                    + "\"");
-        }
-        out.println("                />");
-        out.println("            </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">First Name:</td>");
-        out.println("            <td>");
-        out.println("                <input type=\"text\" name=\"firstName\"");
-        if (form != null && form.getFirstName() != null) {
-            out.println("                    value=\"" + form.getFirstName()
-                    + "\"");
-        }
-        out.println("                />");
-        out.println("            </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">Last Name:</td>");
-        out.println("            <td>");
-        out.println("                <input type=\"text\" name=\"lastName\"");
-        if (form != null && form.getLastName() != null) {
-            out.println("                    value=\"" + form.getLastName()
-                    + "\"");
-        }
-        out.println("                />");
-        out.println("            </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td style=\"font-size: x-large\">Password:</td>");
-        out.println("            <td><input type=\"password\" name=\"password\" /></td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("            <td colspan=\"2\" style=\"text-align: center;\">");
-        out.println("                <input type=\"submit\" name=\"button\" value=\"Login\" />");
-        out.println("                <input type=\"submit\" name=\"button\" value=\"Register\" />");
-        out.println("                <input type=\"hidden\" name=\"First Time Visit\"/>");
-        out.println("            </td>");
-        out.println("        </tr>");
-        out.println("    </table>");
-        out.println("</form>");
-        out.println("</body>");
-        out.println("</html>");
-    }
-
     private void outputToDoList(HttpServletResponse response, HttpServletRequest request)
-            throws IOException, ServletException {
+            throws IOException {
         // Just call the version that takes a List passing an empty List
         List<String> list = new ArrayList<String>();
         outputFavorite(response, request, list);
     }
 
     private void outputToDoList(HttpServletResponse response, HttpServletRequest request, String message)
-            throws IOException, ServletException
+            throws IOException
     {
         // Just put the message into a List and call the version that takes a
         // List
@@ -364,19 +242,19 @@ public class HW3 extends HttpServlet {
     }
 
     private void outputFavorite(HttpServletResponse response, HttpServletRequest request,
-            List<String> messages) throws IOException, ServletException
+            List<String> messages) throws IOException
     {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("email");
-        int clickPoint = 0;
+        UserBean user = (UserBean) session.getAttribute("email");
+
         // Get the list of favorites to display at the end
         FavoriteBean[] beans;
         try {
-            beans = favoriteDAO.getFavoriteLists(user.getUserId());
+            beans = favoriteDAO.getUserFavorites(user.getUserId());
             Arrays.sort(beans,
                     (FavoriteBean i1, FavoriteBean i2) -> i1.getPosition() - i2.getPosition());
 
-        } catch (MyDAOException e) {
+        } catch (RollbackException e) {
             // If there's an access error, add the message to our list of
             // messages
             messages.add(e.getMessage());
@@ -393,19 +271,11 @@ public class HW3 extends HttpServlet {
         generateHead(out);
 
         out.println("<body>");
-        out.println("<h2>Favorites for " + user.getLastName() + ", " + user.getFirstName() + ": " + user.getUserId() + "</h2>");
+        out.println("<h2>Favorites for " + user.getFirstName() + " "+ user.getLastName()  + "</h2>");
 
         // Generate an HTML <form> to get data from the user
         out.println("<form method=\"POST\">");
         out.println("    <table>");
-        out.println("       <tr>");
-        out.println("           <td>");
-        out.println("               <form method=\"POST\">");
-        out.println("                   <input type=\"hidden\" name=\"favoriteId\" value=\""
-                + clickPoint + "\" />");
-        out.println("               </form>");
-        out.println("           </td>");
-        out.println("        </tr>");
         out.println("        <tr><td colspan=\"3\"><hr/></td></tr>");
         out.println("        <tr>");
         out.println("            <td style=\"font-size: large\">URL:</td>");
@@ -429,26 +299,18 @@ public class HW3 extends HttpServlet {
             out.println(message);
             out.println("</p>");
         }
-        System.out.println("~~~~~~~~~~~~~~~~");
         
         out.println("<p style=\"font-size: x-large\">The list now has "
                 + beans.length + " favorites.</p>");
         out.println("<table>");
         for (int i = 0; i < beans.length; i++) {
-
             out.println("    <tr>");
             out.println("        <td>");
-            out.println("            <form method=\"POST\">");
-            out.println("                <input type=\"hidden\" name=\"userId\" value=\""
-                    + beans[i].getUserId() + "\" />");
-            out.println("            </form>");
             out.println("        </td>");
             out.println("        <td><span style=\"font-size: x-large\">"
                     + (i + 1) + ".</span></td>");
             out.println("        <td>");
-            
-            out.println("          <a href=\"\">");
-//            out.println("          <a href=\"Calculator\">");
+            out.println("          <a href=\"fav?favoriteId="+ beans[i].getFavoriteId() + "\">");
             out.println("            <span style=\"font-size: x-large\">" + beans[i].getURL() + "</span>");
             out.println("          </a>");
             out.println("        </td>");
@@ -458,38 +320,19 @@ public class HW3 extends HttpServlet {
             out.println("        <td></td>");
             out.println("        <td></td>");
             out.println("        <td><span style=\"font-size: x-large\">"
-                    + beans[i].getComment() + "</td>");
+                    + beans[i].getComment() + "</span></td>");
             out.println("    </tr>");
             
             out.println("    <tr>");
             out.println("        <td></td>");
             out.println("        <td></td>");
             out.println("        <td><span style=\"font-size: x-large\">"
-                    + beans[i].getClickCount() + " Clicks </td>");
+                    + beans[i].getClickCount() + " Clicks </span></td>");
             out.println("    </tr>");
         }
         out.println("</table>");
 
         out.println("</body>");
         out.println("</html>");
-        
-//      String favoriteIdStr = request.getParameter("favoriteId");
-//      System.out.println(favoriteIdStr);
-      int favoriteId = clickPoint;
-      System.out.println(favoriteId);
-//      if (favoriteIdStr != null) {
-//          favoriteId = Integer.parseInt(favoriteIdStr);
-          try {
-              FavoriteBean bean = favoriteDAO.getFavorite(favoriteId);
-              favoriteDAO.incrementClick(bean.getClickCount() + 1, favoriteId);
-//              int userId = bean.getUserId();
-//              User user = (User) userDAO.readInFavoriteForm(userId);
-//              HttpSession session = request.getSession();
-//              session.setAttribute("email", user);
-          } catch (MyDAOException e) {
-              throw new ServletException(e);
-          }
-//      }
     }
-    
 }

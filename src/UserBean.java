@@ -1,5 +1,9 @@
-
-public class User {
+/**
+ * @author Haorui Wu
+ * @date 11/23/2015
+ * @courseNumber: 08672
+ */
+public class UserBean {
     private int userId;
     private String email;
     private String firstName;

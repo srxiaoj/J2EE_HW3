@@ -1,4 +1,8 @@
-
+/**
+ * @author Haorui Wu
+ * @date 11/23/2015
+ * @courseNumber: 08672
+ */
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,7 @@ public class RegisterForm  {
     private String lastName;
     private String password;
     private String button;
+    private String registration;
     
     public RegisterForm(HttpServletRequest request) {
         email = request.getParameter("email");
@@ -20,20 +25,18 @@ public class RegisterForm  {
         lastName = request.getParameter("lastName");
         password = request.getParameter("password");
         button   = request.getParameter("button");
+        registration = request.getParameter("registration");
     }
     public String getEmail()     { return email;     }
     public String getFirstName() { return firstName; }
     public String getLastName()  { return lastName;  }
     public String getPassword()  { return password;  }
     public String getButton()    { return button;    }
+    public String getRegistration()  {  return registration;  }
     
-    public boolean isPresent()   { return button != null; }
-    public boolean isFirstTimeVisit(HttpServletRequest request) {
-        String isFirst = request.getParameter("First Time Visit");
-        if (isFirst == null) {
-            return true;
-        } else 
-            return false;
+    public boolean isPresent()   { 
+//        System.out.println();
+        return registration != null;
     }
 
     public List<String> getValidationErrors() {

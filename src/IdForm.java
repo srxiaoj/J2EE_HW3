@@ -1,4 +1,8 @@
-
+/**
+ * @author Haorui Wu
+ * @date 11/23/2015
+ * @courseNumber: 08672
+ */
 
 import java.util.ArrayList;
 import java.util.List;
