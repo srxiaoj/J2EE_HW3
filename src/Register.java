@@ -47,10 +47,10 @@ public class Register extends HttpServlet{
         String registration = request.getParameter("registration");
         RegisterForm registerForm = new RegisterForm(request);
         String action = registerForm.getButton();
-        System.out.println("registrations is: " + registration);
+//        System.out.println("registrations is: " + registration);
         if (action != null) {
             if (action.equals("Login")) {
-                System.out.println("rediect to login");
+//                System.out.println("rediect to login");
                 response.sendRedirect("");
                 return;
             }
@@ -66,18 +66,16 @@ public class Register extends HttpServlet{
                 outputRegisterPage(response, registerForm, null);
                 return;
             }
-//            if (!registerForm.isPresent()) {
             errors.addAll(registerForm.getValidationErrors());
             if (errors.size() != 0) {
                 outputRegisterPage(response, registerForm, errors);
                 return;
             }
-//            }
             try {
                 UserBean user = new UserBean();
                 
                 if (registerForm.getButton().equals("Register")) {
-                    System.out.println("click on register");
+//                    System.out.println("click on register");
                     UserBean[] a = userDAO.getUser(registerForm.getEmail());
                     if (a.length != 0) {
                         errors.add("Email already used");
@@ -88,7 +86,7 @@ public class Register extends HttpServlet{
                     user.setFirstName(registerForm.getFirstName());
                     user.setLastName(registerForm.getLastName());
                     user.setPassword(registerForm.getPassword());
-                    System.out.println("saving user bean in register page");
+//                    System.out.println("saving user bean in register page");
                     // create user bean with primaryKey and override the original user bean
                     userDAO.createAutoIncrement(user);
                 } else {
@@ -100,10 +98,10 @@ public class Register extends HttpServlet{
                 }
                 HttpSession session = request.getSession();
                 session.setAttribute("email", user);
-                System.out.println("In register page: ");
-                System.out.println("userId is: " + user.getUserId());
+//                System.out.println("In register page: ");
+//                System.out.println("userId is: " + user.getUserId());
                 response.sendRedirect("");
-                System.out.println("redirect to favorite list page");
+//                System.out.println("redirect to favorite list page");
             } catch (RollbackException e) {
                 errors.add(e.getMessage());
                 outputRegisterPage(response, registerForm, errors);

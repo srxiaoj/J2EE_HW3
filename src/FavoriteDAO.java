@@ -124,9 +124,7 @@ public class FavoriteDAO extends GenericDAO<FavoriteBean>{
     }
     
     public FavoriteBean[] getUserFavorites(int userId) throws RollbackException {
-        System.out.println("start to list out favorite beans of this userId");
         FavoriteBean[] a = match(MatchArg.equals("userId", userId));
-        System.out.println("list out favorite beans of this userId");
         return a;
 //        Connection con = null;
 //        try {

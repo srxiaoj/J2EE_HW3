@@ -9,8 +9,6 @@ import org.genericdao.PrimaryKey;
 /**
  * genericDAO is very tricky with naming of getter and setter.
  * first letter of the variable should be lower case
- * @author thanksgiving
- *
  */
 @PrimaryKey("favoriteId")
 public class FavoriteBean {

@@ -45,7 +45,7 @@ public class HW3 extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("email") == null) {
-            System.out.println("login: " + count++);
+//            System.out.println("login: " + count++);
             login(request, response);
         } else {
             manageList(request, response);
@@ -251,7 +251,7 @@ public class HW3 extends HttpServlet {
         // Get the list of favorites to display at the end
         FavoriteBean[] beans;
         try {
-            System.out.println("Get favorite list using userId in HW3");
+//            System.out.println("Get favorite list using userId in HW3");
             beans = favoriteDAO.getUserFavorites(user.getUserId());
 //            Arrays.sort(beans,
 //                    (FavoriteBean i1, FavoriteBean i2) -> i1.getPosition() - i2.getPosition());
