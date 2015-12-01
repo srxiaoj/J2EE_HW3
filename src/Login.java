@@ -51,7 +51,7 @@ public class Login extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null) {
+        if (session.getAttribute("email") != null) {
             response.sendRedirect("HW3");
             return;
         }

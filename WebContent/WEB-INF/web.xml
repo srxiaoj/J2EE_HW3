@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
-    <display-name>ToDoList via SQL</display-name>
+    <display-name>HW3</display-name>
     <description>
-      Example of the use of SQL and JDBC
+      HW3
     </description>
 
 
@@ -30,7 +30,7 @@
     <servlet>
         <servlet-name>  login-servlet       </servlet-name>
         <servlet-class>
-        	.Login
+        	Login
         </servlet-class>
     </servlet>
     
@@ -48,7 +48,7 @@
         </servlet-class>
     </servlet>
     
-       
+    
     <servlet-mapping>
         <servlet-name>  my-servlet        </servlet-name>
         <url-pattern>   /HW3   			  </url-pattern>
