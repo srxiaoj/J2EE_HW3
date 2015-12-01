@@ -13,5 +13,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="/home/thanksgiving/Downloads/formbeanfactory-2.1.0.jar" sourcepath="/home/thanksgiving/Downloads/formbeanfactory-src_2.1.0.zip"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

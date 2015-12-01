@@ -11,7 +11,6 @@ import org.genericdao.DAOException;
 import org.genericdao.GenericDAO;
 import org.genericdao.MatchArg;
 import org.genericdao.RollbackException;
-import org.genericdao.Transaction;
 
 public class UserDAO extends GenericDAO<UserBean> {
     public UserDAO(ConnectionPool cp, String tableName) throws DAOException {
@@ -35,9 +34,14 @@ public class UserDAO extends GenericDAO<UserBean> {
 //        }
 //    }
     
-    public UserBean[] getUser(String email) throws RollbackException {
+    public UserBean getUser(String email) throws RollbackException {
         UserBean[] beans = match(MatchArg.containsIgnoreCase("email", email));
-        return beans;
+        if (beans.length == 0) {
+            return null;
+        }
+        else {
+            return beans[0];
+        }
     }
 }
 

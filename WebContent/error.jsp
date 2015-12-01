@@ -3,12 +3,12 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <title>ToDoList6 -- Error Page</title>
+        <title>HW3 -- Error Page</title>
     </head>
     
 	<body>
 	
-		<h2>ToDoList6 Error</h2>
+		<h2>HW3 Error</h2>
 <%
 		List<String> errors = (List<String>) request.getAttribute("errors");
 		if (errors != null) {

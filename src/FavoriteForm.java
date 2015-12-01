@@ -7,16 +7,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import org.mybeans.form.FormBean;
 
-public class FavoriteForm {
+public class FavoriteForm extends FormBean{
     private String URL;
     private String comment;
-
-    public FavoriteForm(HttpServletRequest request) {
-        URL = sanitize(request.getParameter("URL"));
-        comment = sanitize(request.getParameter("comment"));
-    }
 
     public String getURL() {
         return URL;
@@ -26,6 +21,13 @@ public class FavoriteForm {
         return comment;
     }
     
+    public void setURL(String s) {
+        URL = s;
+    }
+    
+    public void setComment(String s) {
+        comment = s;
+    }
     public List<String> getValidationErrors() {
         List<String> errors = new ArrayList<String>();
 
@@ -39,8 +41,8 @@ public class FavoriteForm {
         return errors;
     }
 
-    private String sanitize(String s) {
-        return s.replace("&", "&amp;").replace("<", "&lt;")
-                .replace(">", "&gt;").replace("\"", "&quot;");
-    }
+//    private String sanitize(String s) {
+//        return s.replace("&", "&amp;").replace("<", "&lt;")
+//                .replace(">", "&gt;").replace("\"", "&quot;");
+//    }
 }

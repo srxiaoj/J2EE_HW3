@@ -4,7 +4,6 @@
  * @courseNumber: 08672
  */
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +35,6 @@ public class ClickUpdate extends HttpServlet{
             throws IOException, ServletException {
 //        System.out.println("!!!!!!!!!!");
         response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
         String favoriteIdStr = request.getParameter("favoriteId");
         int favoriteId;
         if (favoriteIdStr != null) {

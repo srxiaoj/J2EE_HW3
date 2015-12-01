@@ -159,7 +159,6 @@ public class FavoriteDAO extends GenericDAO<FavoriteBean>{
 //            throw new MyDAOException(e);
 //        }
     }
-
     
     public void incrementClick(int favoriteId) throws RollbackException {
         FavoriteBean bean = read(favoriteId);

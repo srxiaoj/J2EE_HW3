@@ -7,11 +7,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import org.mybeans.form.FormBean;
 
-import jdk.nashorn.internal.ir.RuntimeNode.Request;
-
-public class RegisterForm  {
+public class RegisterForm extends FormBean{
     private String email;
     private String firstName;
     private String lastName;
@@ -19,14 +17,6 @@ public class RegisterForm  {
     private String button;
     private String registration;
     
-    public RegisterForm(HttpServletRequest request) {
-        email = request.getParameter("email");
-        firstName = request.getParameter("firstName");
-        lastName = request.getParameter("lastName");
-        password = request.getParameter("password");
-        button   = request.getParameter("button");
-        registration = request.getParameter("registration");
-    }
     public String getEmail()     { return email;     }
     public String getFirstName() { return firstName; }
     public String getLastName()  { return lastName;  }
@@ -34,10 +24,10 @@ public class RegisterForm  {
     public String getButton()    { return button;    }
     public String getRegistration()  {  return registration;  }
     
-    public boolean isPresent()   { 
-//        System.out.println();
-        return registration != null;
-    }
+//    public boolean isPresent()   { 
+////        System.out.println();
+//        return registration != null;
+//    }
 
     public List<String> getValidationErrors() {
         List<String> errors = new ArrayList<String>();
