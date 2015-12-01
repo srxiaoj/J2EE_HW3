@@ -9,61 +9,47 @@
       Example of the use of SQL and JDBC
     </description>
 
+
+	<context-param>
+        <param-name>  jdbcDriverName          </param-name>
+        <param-value> com.mysql.jdbc.Driver   </param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>  jdbcURL                 </param-name>
+        <param-value> jdbc:mysql:///test  </param-value>
+    </context-param>
+    
     <servlet>
         <servlet-name>  my-servlet       </servlet-name>
         <servlet-class>
         	HW3
         </servlet-class>
-        <init-param>
-            <param-name>   jdbcDriver             </param-name> 
-            <param-value>  com.mysql.jdbc.Driver  </param-value>
-        </init-param>
-        <init-param>
-            <param-name>   jdbcURL                </param-name> 
-            <param-value>  jdbc:mysql:///test     </param-value>
-        </init-param>
     </servlet>
-    
-    <servlet-mapping>
-        <servlet-name>  my-servlet        </servlet-name>
-        <url-pattern>   /HW3   			  </url-pattern>
-    </servlet-mapping>
     
     <servlet>
         <servlet-name>  clickUpdate-servlet       </servlet-name>
         <servlet-class>
         	ClickUpdate
         </servlet-class>
-        <init-param>
-            <param-name>   jdbcDriver             </param-name> 
-            <param-value>  com.mysql.jdbc.Driver  </param-value>
-        </init-param>
-        <init-param>
-            <param-name>   jdbcURL                </param-name> 
-            <param-value>  jdbc:mysql:///test     </param-value>
-        </init-param>
     </servlet>
-       
-    <servlet-mapping>
-        <servlet-name> clickUpdate-servlet </servlet-name>
-        <url-pattern>	/fav/*   </url-pattern>
-    </servlet-mapping>
     
     <servlet>
         <servlet-name>  register-servlet       </servlet-name>
         <servlet-class>
         	Register
         </servlet-class>
-        <init-param>
-            <param-name>   jdbcDriver             </param-name> 
-            <param-value>  com.mysql.jdbc.Driver  </param-value>
-        </init-param>
-        <init-param>
-            <param-name>   jdbcURL                </param-name> 
-            <param-value>  jdbc:mysql:///test     </param-value>
-        </init-param>
     </servlet>
-
+       
+    <servlet-mapping>
+        <servlet-name>  my-servlet        </servlet-name>
+        <url-pattern>   /HW3   			  </url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name> clickUpdate-servlet </servlet-name>
+        <url-pattern>	/fav/*   </url-pattern>
+    </servlet-mapping>
        
     <servlet-mapping>
         <servlet-name>  register-servlet        </servlet-name>
