@@ -1,14 +1,11 @@
-/**
- * @author Haorui Wu
- * @date 11/23/2015
- * @courseNumber: 08672
- */
+package edu.cmu.cs.webapp.todolist6;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,22 +18,29 @@ import org.genericdao.RollbackException;
 import org.mybeans.form.FormBeanException;
 import org.mybeans.form.FormBeanFactory;
 
-public class HW3 extends HttpServlet {
+import edu.cmu.cs.webapp.todolist6.dao.FavoriteDAO;
+import edu.cmu.cs.webapp.todolist6.databean.FavoriteBean;
+import edu.cmu.cs.webapp.todolist6.databean.UserBean;
+import edu.cmu.cs.webapp.todolist6.formbean.FavoriteForm;
+
+public class FavoriteList extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
     private FavoriteDAO favoriteDAO;
-//    private UserDAO userDAO;
-    private FormBeanFactory<FavoriteForm> favoriteFormFactory = FormBeanFactory.getInstance(FavoriteForm.class);
+
+    private FormBeanFactory<FavoriteForm> favoriteFormFactory = FormBeanFactory
+            .getInstance(FavoriteForm.class);
 
     public void init() throws ServletException {
-        String jdbcDriverName = getInitParameter("jdbcDriver");
-        String jdbcURL = getInitParameter("jdbcURL");
+        ServletContext context = getServletContext();
+        String jdbcDriverName = context.getInitParameter("jdbcDriverName");
+        String jdbcURL = context.getInitParameter("jdbcURL");
 
         try {
-            ConnectionPool cp = new ConnectionPool(jdbcDriverName, jdbcURL);
-//            userDAO = new UserDAO(cp, "haoruiw_user");
-            favoriteDAO = new FavoriteDAO(cp, "haoruiw_favorite");
+            ConnectionPool connectionPool = new ConnectionPool(jdbcDriverName,
+                    jdbcURL);
+            favoriteDAO = new FavoriteDAO(connectionPool, "haoruiw_favorite");
         } catch (DAOException e) {
             throw new ServletException(e);
         }
@@ -46,7 +50,7 @@ public class HW3 extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
-    
+
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -56,6 +60,17 @@ public class HW3 extends HttpServlet {
             response.sendRedirect("Login");
             return;
         }
+        String favoriteIdStr = request.getParameter("favoriteId");
+        if (favoriteIdStr != null) {
+            int favoriteId = Integer.parseInt(favoriteIdStr);
+            System.out.println("favoriteId is: " + favoriteId);
+            try {
+                favoriteDAO.incrementClick(favoriteId);
+            } catch (RollbackException e) {
+                throw new ServletException(e);
+            }
+        }
+        
         List<String> errors = new ArrayList<String>();
         request.setAttribute("errors", errors);
 
@@ -68,50 +83,41 @@ public class HW3 extends HttpServlet {
 
             FavoriteForm form = favoriteFormFactory.create(request);
             request.setAttribute("form", form);
+
             if (!form.isPresent()) {
                 RequestDispatcher d = request
-                        .getRequestDispatcher("hw3.jsp");
+                        .getRequestDispatcher("favorite.jsp");
                 d.forward(request, response);
                 return;
             }
-            errors.addAll(form.getValidationErrors());
-            if (errors.size() > 0) {
-                RequestDispatcher d = request
-                        .getRequestDispatcher("hw3.jsp");
-                d.forward(request, response);
-                return;
-            }
-            FavoriteBean bean = new FavoriteBean();
-            bean.setUrl(form.getURL());
-            bean.setComment(form.getComment());
-            UserBean u = (UserBean) request.getSession().getAttribute("email");
-            bean.setUserId(u.getUserId());
-
-            if (action == null) {
-                // No change to list requested
-                RequestDispatcher d = request
-                        .getRequestDispatcher("hw3.jsp");
-                d.forward(request, response);
-                return;
-            }
-
+            
             if (action.equals("Log out")) {
                 response.sendRedirect("Login");
                 session.setAttribute("email", null); //remove session also
                 return;
             }
-
-            if (action.equals("Add Favorite")) {
+            
+            errors.addAll(form.getValidationErrors());
+            if (errors.size() > 0) {
                 RequestDispatcher d = request
-                        .getRequestDispatcher("hw3.jsp");
+                        .getRequestDispatcher("favorite.jsp");
                 d.forward(request, response);
                 return;
+            }
+
+            FavoriteBean bean = new FavoriteBean();
+            bean.setUrl(form.getUrl());
+            bean.setComment(form.getComment());
+            UserBean u = (UserBean) request.getSession().getAttribute("email");
+            bean.setUserId(u.getUserId());
+
+            if (action.equals("Add Favorite")) {
+                favoriteDAO.create(bean);
             }
             
          // Fetch the items again, since we modified the list
             request.setAttribute("favorites", favoriteDAO.getUserFavorites(user.getUserId()));
-            RequestDispatcher d = request
-                    .getRequestDispatcher("hw3.jsp");
+            RequestDispatcher d = request.getRequestDispatcher("favorite.jsp");
             d.forward(request, response);
             
         } catch (RollbackException e) {

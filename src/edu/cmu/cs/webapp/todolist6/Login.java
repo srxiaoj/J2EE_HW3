@@ -1,4 +1,4 @@
-
+package edu.cmu.cs.webapp.todolist6;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,14 +18,16 @@ import org.genericdao.RollbackException;
 import org.mybeans.form.FormBeanException;
 import org.mybeans.form.FormBeanFactory;
 
+import edu.cmu.cs.webapp.todolist6.dao.UserDAO;
+import edu.cmu.cs.webapp.todolist6.databean.UserBean;
+import edu.cmu.cs.webapp.todolist6.formbean.LoginForm;
 
 public class Login extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-//    private FavoriteDAO favoriteDAO;
     private UserDAO userDAO;
-    
+
     private FormBeanFactory<LoginForm> loginFormFactory = FormBeanFactory.getInstance(LoginForm.class);
 
     public void init() throws ServletException {
@@ -37,7 +39,6 @@ public class Login extends HttpServlet {
             ConnectionPool connectionPool = new ConnectionPool(jdbcDriverName,
                     jdbcURL);
             userDAO = new UserDAO(connectionPool, "haoruiw_user");
-//            favoriteDAO = new FavoriteDAO(connectionPool, "haoruiw_favorite");
         } catch (DAOException e) {
             throw new ServletException(e);
         }
@@ -52,7 +53,7 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("email") != null) {
-            response.sendRedirect("HW3");
+            response.sendRedirect("FavoriteList");
             return;
         }
 
@@ -77,7 +78,7 @@ public class Login extends HttpServlet {
                 return;
             }
 
-            UserBean user = userDAO.getUser(form.getEmail());
+            UserBean user = userDAO.read(form.getEmail());
             if (user == null) {
                 errors.add("No such user");
                 RequestDispatcher d = request.getRequestDispatcher("login.jsp");
@@ -93,7 +94,7 @@ public class Login extends HttpServlet {
             }
 
             session.setAttribute("email", user);
-            response.sendRedirect("HW3");
+            response.sendRedirect("FavoriteList");
 
         } catch (RollbackException e) {
             errors.add(e.getMessage());

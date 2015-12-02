@@ -1,10 +1,7 @@
+package edu.cmu.cs.webapp.todolist6.databean;
+
 import org.genericdao.PrimaryKey;
 
-/**
- * @author Haorui Wu
- * @date 11/23/2015
- * @courseNumber: 08672
- */
 @PrimaryKey("userId")
 public class UserBean {
     private int userId;
@@ -12,43 +9,35 @@ public class UserBean {
     private String firstName;
     private String lastName;
     private String password;
-
     public int getUserId() {
         return userId;
     }
-
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
     public String getEmail() {
         return email;
     }
-
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public String getFirstName() {
         return firstName;
     }
-
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
     public String getLastName() {
         return lastName;
     }
-    
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
     public String getPassword() {
         return password;
     }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public void setUserId(int s) {
-        userId = s;
-    }
-    
-    public void setEmail(String s) {
-        email =s;
-    }
-    
-    public void setFirstName(String s) {
-        firstName = s;
-    }
-    
-    public void setLastName(String s) {
-        lastName =s;
-    }
-    public void setPassword(String s) {
-        password = s;
-    }
 }

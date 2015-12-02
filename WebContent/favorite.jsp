@@ -1,15 +1,18 @@
 <%@page import="java.util.List"%>
-
+<%@page import="edu.cmu.cs.webapp.todolist6.databean.FavoriteBean"%>
+<%@page import="edu.cmu.cs.webapp.todolist6.databean.UserBean"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8"/>
-        <title>Favorite List </title>
+        <title>HW3 </title>
     </head>
     
     <body>
-    
-        <h2>Favorite List Example</h2>
+	<%
+	    UserBean user = (UserBean) request.getSession().getAttribute("email");
+	%>
+	<h2>Favorite list for <%= user.getFirstName() %> <%= user.getLastName() %></h2>
 <%
 		List<String> errors = (List<String>) request.getAttribute("errors");
 		if (errors != null) {
@@ -19,16 +22,16 @@
 <%
 			}
 		}
-%>
+%>	
 
-	<form action="HW3" method="POST">
+        <form action="FavoriteList" method="POST">
 		<table>
 			<tr>
 				<td colspan="3"><hr /></td>
 			</tr>
 			<tr>
 				<td style="font-size: large">URL:</td>
-				<td colspan="2"><input type="text" size="40" name="URL" /></td>
+				<td colspan="2"><input type="text" size="40" name="url" /></td>
 			</tr>
 			<tr>
 				<td style="font-size: large">Comment:</td>
@@ -46,7 +49,7 @@
 	</form>
 
 	<%
-	    FavoriteBean[] favorites = (FavoriteBean[]) request.getAttribute("favorite");
+	    FavoriteBean[] favorites = (FavoriteBean[]) request.getAttribute("favorites");
 	%>
 		<p style="font-size: x-large">The list now has <%= favorites.length %> items.</p>
 
@@ -58,7 +61,7 @@
 			<tr>
 				<td></td>
 				<td><span style="font-size: x-large"><%= i + 1 %>.</span></td>
-				<td><a href="fav?favoriteId=<%= favorite.getFavoriteId() %>"> <span
+				<td><a href="?favoriteId=<%= favorite.getFavoriteId() %>"> <span
 						style="font-size: x-large">
 						<%= favorite.getUrl().replace("<", "&lt;").replace(">","&gt;").replace("\"","&quot;") %></span>
 				</a></td>
@@ -78,7 +81,5 @@
        		}
 %>
 		</table>
-
-       	Click <a href="Logout">here</a> to log out.
     </body>
 </html>

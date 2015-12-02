@@ -8,7 +8,7 @@
     
 	<body>
 	
-		<h2>HW3 Error</h2>
+		<h2>Error</h2>
 <%
 		List<String> errors = (List<String>) request.getAttribute("errors");
 		if (errors != null) {
@@ -25,7 +25,7 @@
 <%
 		} else {
 %>
-			Click <a href="ToDoList">here</a> to return to the To Do List.
+			Click <a href="FavoriteList">here</a> to return to the Favorite List.
 <%
 		}
 %>	

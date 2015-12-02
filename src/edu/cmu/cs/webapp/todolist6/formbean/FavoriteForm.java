@@ -1,37 +1,43 @@
-/**
- * @author Haorui Wu
- * @date 11/23/2015
- * @courseNumber: 08672
- */
+package edu.cmu.cs.webapp.todolist6.formbean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.mybeans.form.FormBean;
 
-public class FavoriteForm extends FormBean{
-    private String URL;
+public class FavoriteForm extends FormBean {
+    private String url;
     private String comment;
+    private String action;
 
-    public String getURL() {
-        return URL;
+    public String getUrl() {
+        return url;
+    }
+    
+    public String getAction() {
+        return action;
     }
 
     public String getComment() {
         return comment;
     }
     
-    public void setURL(String s) {
-        URL = s;
+    public void setUrl(String s) {
+        url = s;
     }
     
     public void setComment(String s) {
         comment = s;
     }
+    
+    public void setAction(String s) {
+        action = s;
+    }
+    
     public List<String> getValidationErrors() {
         List<String> errors = new ArrayList<String>();
 
-        if (URL == null || URL.length() == 0) {
+        if (url == null || url.length() == 0) {
             errors.add("URL is required");
         }
         if (comment == null || comment.length() == 0) {
@@ -40,9 +46,4 @@ public class FavoriteForm extends FormBean{
 
         return errors;
     }
-
-//    private String sanitize(String s) {
-//        return s.replace("&", "&amp;").replace("<", "&lt;")
-//                .replace(">", "&gt;").replace("\"", "&quot;");
-//    }
 }

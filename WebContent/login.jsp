@@ -24,7 +24,7 @@
 		        <tr>
 		            <td style="font-size: x-large">User Name:</td>
 		            <td>
-		                <input type="text" name="userName" value="${form.userName}" />
+		                <input type="text" name="email" value="${form.email}" />
 		            </td>
 		        </tr>
 		        <tr>
@@ -34,9 +34,15 @@
 		        <tr>
 		            <td colspan="2" style="text-align: center;">
 		                <input type="submit" name="action" value="Login" />
-		                <input type="submit" name="action" value="Register" />
 		            </td>
 		        </tr>
+		        <tr>
+        			<td colspan = "2" style="text-align: center;">
+        				<a href="Register">
+        					<span style="font-size: x-large">Go To Register</span>
+        				</a>
+        			</td>
+        		</tr>
 			</table>
 		</form>
 	</body>
