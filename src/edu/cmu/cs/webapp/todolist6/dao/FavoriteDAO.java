@@ -14,12 +14,12 @@ public class FavoriteDAO extends GenericDAO<FavoriteBean> {
         super(FavoriteBean.class, tableName, cp);
     }
 
-public void create(FavoriteBean bean) throws RollbackException {
-        
+    public void create(FavoriteBean bean) throws RollbackException {
+
         try {
             Transaction.begin();
-            
-         // Create a new ItemBean in the database with the next id number
+
+            // Create a new ItemBean in the database with the next id number
             createAutoIncrement(bean);
             Transaction.commit();
         } finally {
@@ -27,17 +27,17 @@ public void create(FavoriteBean bean) throws RollbackException {
                 Transaction.rollback();
         }
     }
-    
+
     public FavoriteBean[] getUserFavorites(int userId) throws RollbackException {
         FavoriteBean[] a = match(MatchArg.equals("userId", userId));
         return a;
     }
-    
+
     public void incrementClick(int favoriteId) throws RollbackException {
         FavoriteBean bean = read(favoriteId);
         if (bean != null) {
             int i = bean.getClickCount();
-            bean.setClickCount(i+1);
+            bean.setClickCount(i + 1);
             update(bean);
         }
     }
