@@ -49,7 +49,9 @@ public class Controller extends HttpServlet {
         String servletPath = request.getServletPath();
         UserBean user = (UserBean) session.getAttribute("user");
         String action = getActionName(servletPath);
+        
         System.out.println("action name is:" + action);
+        
         if (user == null) {
             if (action.equals("login.do")) {
                 // If the user click on login

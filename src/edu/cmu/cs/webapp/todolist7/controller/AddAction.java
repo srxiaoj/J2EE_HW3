@@ -48,6 +48,16 @@ public class AddAction extends Action {
             FavoriteForm form = favoriteFormFactory.create(request);
             request.setAttribute("form", form);
             
+            String favoriteIdStr = request.getParameter("favoriteId");
+            if (favoriteIdStr != null) {
+                int favoriteId = Integer.parseInt(favoriteIdStr);
+                System.out.println("favoriteId is: " + favoriteId);
+                favoriteDAO.incrementClick(favoriteId);
+//                return "favorite.jsp"; // if return jsp page, the page will not refresh
+//                                       // and the favoriteId is shown on URL
+                return "add.do";
+            }
+            
             if (!form.isPresent()) {
                 return "favorite.jsp";
             }
@@ -72,7 +82,7 @@ public class AddAction extends Action {
             System.out.println("get list");
             // Fetch the items again, since we modified the list
             request.setAttribute("favorites", favoriteDAO.getUserFavorites(user.getUserId()));
-            return "favoritelist.do";
+            return "favorite.jsp";
 
         } catch (RollbackException e) {
             errors.add(e.getMessage());

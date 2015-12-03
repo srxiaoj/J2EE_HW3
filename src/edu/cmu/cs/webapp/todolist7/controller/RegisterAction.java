@@ -80,7 +80,7 @@ public class RegisterAction extends Action {
           session.setAttribute("user", user);
            System.out.println("In register page: ");
            System.out.println("userId is: " + user.getUserId());
-          return "favoritelist.do";
+          return "add.do";
           // System.out.println("redirect to favorite list page");
       } catch (RollbackException e) {
           errors.add(e.getMessage());

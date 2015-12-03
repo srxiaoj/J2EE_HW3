@@ -30,19 +30,6 @@ public class FavoriteListAction extends Action {
         HttpSession session = request.getSession();
         UserBean user = (UserBean) session.getAttribute("user");
 
-        
-        String favoriteIdStr = request.getParameter("favoriteId");
-        if (favoriteIdStr != null) {
-            int favoriteId = Integer.parseInt(favoriteIdStr);
-            System.out.println("favoriteId is: " + favoriteId);
-            try {
-                favoriteDAO.incrementClick(favoriteId);
-            } catch (RollbackException e) {
-                errors.add(e.getMessage());
-                return "error.jsp";
-            }
-        }
-        
         try {
             request.setAttribute("favorites", favoriteDAO.getUserFavorites(user.getUserId()));
             return ("favorite.jsp");

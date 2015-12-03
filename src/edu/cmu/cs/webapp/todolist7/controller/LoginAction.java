@@ -34,7 +34,7 @@ public class LoginAction extends Action {
 
         // If user is already logged in, redirect to favoritelist.do
         if (session.getAttribute("user") != null) {
-            return "favoritelist.do";
+            return "add.do";
         }
 
         List<String> errors = new ArrayList<String>();
@@ -90,7 +90,7 @@ public class LoginAction extends Action {
             session.setAttribute("user", user);
 
             // If redirectTo is null, redirect to the "favoritelist" action
-            return "favoritelist.do";
+            return "add.do";
         } catch (RollbackException e) {
             errors.add(e.getMessage());
             return "error.jsp";
