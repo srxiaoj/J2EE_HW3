@@ -21,11 +21,11 @@
 		
 		if (session.getAttribute("user") == null) {
 %>
-			Click <a href="Login">here</a> to login.
+			Click <a href="login.do">here</a> to login.
 <%
 		} else {
 %>
-			Click <a href="FavoriteList">here</a> to return to the Favorite List.
+			Click <a href="favoritelist.do">here</a> to return to the To Do List.
 <%
 		}
 %>	

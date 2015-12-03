@@ -1,6 +1,6 @@
 <%@page import="java.util.List"%>
-<%@page import="edu.cmu.cs.webapp.todolist6.databean.FavoriteBean"%>
-<%@page import="edu.cmu.cs.webapp.todolist6.databean.UserBean"%>
+<%@page import="edu.cmu.cs.webapp.todolist7.databean.FavoriteBean"%>
+<%@page import="edu.cmu.cs.webapp.todolist7.databean.UserBean"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,7 +10,7 @@
     
     <body>
 	<%
-	    UserBean user = (UserBean) request.getSession().getAttribute("email");
+	    UserBean user = (UserBean) request.getSession().getAttribute("user");
 	%>
 	<h2>Favorite list for <%= user.getFirstName() %> <%= user.getLastName() %></h2>
 <%
@@ -24,7 +24,7 @@
 		}
 %>	
 
-        <form action="FavoriteList" method="POST">
+        <form action="add.do" method="POST">
 		<table>
 			<tr>
 				<td colspan="3"><hr /></td>
@@ -47,10 +47,9 @@
 			</tr>
 		</table>
 	</form>
-
-	<%
-	    FavoriteBean[] favorites = (FavoriteBean[]) request.getAttribute("favorites");
-	%>
+<%
+	FavoriteBean[] favorites = (FavoriteBean[]) request.getAttribute("favorites");
+%>
 		<p style="font-size: x-large">The list now has <%= favorites.length %> items.</p>
 
 		<table>

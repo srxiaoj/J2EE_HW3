@@ -8,7 +8,7 @@
     
 	<body>
 	
-		<h2>HW3 Login</h2>
+		<h2>Login</h2>
 <%
 		List<String> errors = (List<String>) request.getAttribute("errors");
 		if (errors != null) {
@@ -19,7 +19,7 @@
 			}
 		}
 %>	
-		<form action="Login" method="POST">
+		<form action="login.do" method="POST">
 		    <table>
 		        <tr>
 		            <td style="font-size: x-large">User Name:</td>
@@ -38,7 +38,7 @@
 		        </tr>
 		        <tr>
         			<td colspan = "2" style="text-align: center;">
-        				<a href="Register">
+        				<a href="register.do">
         					<span style="font-size: x-large">Go To Register</span>
         				</a>
         			</td>

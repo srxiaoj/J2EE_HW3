@@ -8,7 +8,7 @@
 
 <body>
 
-	<h2>HW3 Register</h2>
+	<h2>Register</h2>
 	<%
 	    List<String> errors = (List<String>) request.getAttribute("errors");
 	    if (errors != null) {
@@ -21,7 +21,7 @@
 	    }
 	    }
 	%>
-	<form action="Register" method="POST">
+	<form action="register.do" method="POST">
 		<table>
 			<tr>
 				<td style="font-size: x-large">Email Address:</td>

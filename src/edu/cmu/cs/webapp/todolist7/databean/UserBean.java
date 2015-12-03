@@ -1,4 +1,4 @@
-package edu.cmu.cs.webapp.todolist6.databean;
+package edu.cmu.cs.webapp.todolist7.databean;
 
 import org.genericdao.PrimaryKey;
 

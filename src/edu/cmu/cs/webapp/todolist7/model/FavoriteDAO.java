@@ -1,4 +1,6 @@
-package edu.cmu.cs.webapp.todolist6.dao;
+package edu.cmu.cs.webapp.todolist7.model;
+
+import java.util.Comparator;
 
 import org.genericdao.ConnectionPool;
 import org.genericdao.DAOException;
@@ -7,7 +9,7 @@ import org.genericdao.MatchArg;
 import org.genericdao.RollbackException;
 import org.genericdao.Transaction;
 
-import edu.cmu.cs.webapp.todolist6.databean.FavoriteBean;
+import edu.cmu.cs.webapp.todolist7.databean.FavoriteBean;
 
 public class FavoriteDAO extends GenericDAO<FavoriteBean> {
     public FavoriteDAO(ConnectionPool cp, String tableName) throws DAOException {
@@ -41,5 +43,4 @@ public class FavoriteDAO extends GenericDAO<FavoriteBean> {
             update(bean);
         }
     }
-
 }
