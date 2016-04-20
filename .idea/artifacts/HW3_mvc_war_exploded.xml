@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="HW3_mvc:war exploded">
+    <output-path>$PROJECT_DIR$/classes/artifacts/HW3_mvc_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="HW3_mvc" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="HW3_mvc/web/Web" />
+    </root>
+  </artifact>
+</component>
