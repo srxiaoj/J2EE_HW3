@@ -17,6 +17,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/WebContent" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
     <facet type="web" name="Web2">
@@ -27,6 +28,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/classes/artifacts/HW3_mvc_war_exploded" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
   </component>
